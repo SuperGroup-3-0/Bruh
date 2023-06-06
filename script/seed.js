@@ -1,58 +1,140 @@
 'use strict'
 
-const {db, models: {User} } = require('../server/db')
+const User = require('../server/db/models/User')
+const Item = require('../server/db/models/Item')
+const  db = require("../server/db/db")
+const {green, red} = require('chalk')
+
+
+
+const items = [
+  {
+    name: "Protein Powder",
+    description: "High-quality protein powder for muscle growth and recovery.",
+    price: 29.99,
+    imageUrl: "https://www.example.com/protein_powder.jpg"
+  },
+  {
+    name: "Pre-Workout Supplement",
+    description: "Boost your energy and focus before workouts with this powerful pre-workout formula.",
+    price: 39.99,
+    imageUrl: "https://www.example.com/preworkout_supplement.jpg"
+  },
+  {
+    name: "Creatine Monohydrate",
+    description: "Enhance your strength and power with this pure creatine monohydrate powder.",
+    price: 19.99,
+    imageUrl: "https://www.example.com/creatine_monohydrate.jpg"
+  },
+  {
+    name: "BCAA Tablets",
+    description: "Support muscle recovery and prevent muscle breakdown with these BCAA tablets.",
+    price: 24.99,
+    imageUrl: "https://www.example.com/bcaa_tablets.jpg"
+  },
+  {
+    name: "Mass Gainer",
+    description: "Achieve your weight gain goals with this calorie-dense mass gainer shake.",
+    price: 49.99,
+    imageUrl: "https://www.example.com/mass_gainer.jpg"
+  },
+  {
+    name: "Fish Oil Capsules",
+    description: "Get your essential omega-3 fatty acids with these high-potency fish oil capsules.",
+    price: 14.99,
+    imageUrl: "https://www.example.com/fish_oil_capsules.jpg"
+  },
+  {
+    name: "Multivitamin Tablets",
+    description: "Ensure you meet your daily nutrient needs with these comprehensive multivitamin tablets.",
+    price: 9.99,
+    imageUrl: "https://www.example.com/multivitamin_tablets.jpg"
+  },
+  {
+    name: "Glutamine Powder",
+    description: "Support muscle recovery and immune function with this pure glutamine powder.",
+    price: 12.99,
+    imageUrl: "https://www.example.com/glutamine_powder.jpg"
+  },
+  {
+    name: "Weightlifting Belt",
+    description: "Provide extra support to your lower back during heavy weightlifting sessions with this durable weightlifting belt.",
+    price: 34.99,
+    imageUrl: "https://www.example.com/weightlifting_belt.jpg"
+  },
+  {
+    name: "Energy Bars",
+    description: "Fuel your workouts and keep hunger at bay with these delicious and nutritious energy bars.",
+    price: 2.99,
+    imageUrl: "https://www.example.com/energy_bars.jpg"
+  }
+];
+
+const users = [
+  {
+    username: "johnDoe",
+    password: "password123",
+    imageUrl: null
+  },
+  {
+    username: "janeSmith",
+    password: "qwerty",
+    imageUrl: null
+  },
+  {
+    username: "mikeJohnson",
+    password: "abc123",
+    imageUrl: null
+  },
+  {
+    username: "sarahBrown",
+    password: "password456",
+    imageUrl: null
+  },
+  {
+    username: "alexWilson",
+    password: "pass123",
+    imageUrl: null
+  }
+];
+
+
 
 /**
  * seed - this function clears the database, updates tables to
  *      match the models, and populates the database.
  */
-async function seed() {
+const seed = async () => {
+  try {
   await db.sync({ force: true }) // clears db and matches models to tables
   console.log('db synced!')
 
-  // Creating Users
-  const users = await Promise.all([
-    User.create({ username: 'cody', password: '123' }),
-    User.create({ username: 'murphy', password: '123' }),
-  ])
+  // Creating Users (old code)
+  // const users = await Promise.all([
+  //   User.create({ username: 'cody', password: '123' }),
+  //   User.create({ username: 'murphy', password: '123' }),
+  // ])
 
-  console.log(`seeded ${users.length} users`)
-  console.log(`seeded successfully`)
-  return {
-    users: {
-      cody: users[0],
-      murphy: users[1]
-    }
-  }
+  //Creating Users
+   await Promise.all(users.map(user => {
+  return User.create(user);
+}))
+  // Creating Items
+  await Promise.all(items.map(item => {
+    return Item.create(item);
+  }));
+
+console.log(green('Seeding success!'))
+await db.close()
+
+} 
+catch (err) {
+  console.error(red('Oh noes! Something went wrong!'))
+  console.error(err)
+ 
 }
+};
 
-/*
- We've separated the `seed` function from the `runSeed` function.
- This way we can isolate the error handling and exit trapping.
- The `seed` function is concerned only with modifying the database.
-*/
-async function runSeed() {
-  console.log('seeding...')
-  try {
-    await seed()
-  } catch (err) {
-    console.error(err)
-    process.exitCode = 1
-  } finally {
-    console.log('closing db connection')
-    await db.close()
-    console.log('db connection closed')
-  }
-}
-
-/*
-  Execute the `seed` function, IF we ran this module directly (`node seed`).
-  `Async` functions always return a promise, so we can use `catch` to handle
-  any errors that might occur inside of `seed`.
-*/
-if (module === require.main) {
-  runSeed()
-}
-
-// we export the seed function for testing purposes (see `./seed.spec.js`)
+seed()
+ 
 module.exports = seed
