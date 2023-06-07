@@ -11,10 +11,10 @@ const Item = db.define('item', {
         allowNull: false
     },
     price: {
-        type: Sequelize.DECIMAL(5,2),
+        type: Sequelize.INTEGER,
         validate: {
-            min:0.0,
-            max:999.99,
+            min:0,
+            max:999,
         }
     },
     imageUrl: {
