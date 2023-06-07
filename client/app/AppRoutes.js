@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import {SingleItem} from "../components/singleItem/singleItem"
 import { Route, Routes } from "react-router-dom";
 import AuthForm from "../components/auth/AuthForm";
 import Home from "../components/home/Home";
@@ -23,6 +24,7 @@ const AppRoutes = () => {
         <Routes>
           <Route path="/*" element={<Home />} />
           <Route to="/home" element={<Home />} />
+          <Route path="/items/:itemId" element={<SingleItem/>} />
         </Routes>
       ) : (
         <Routes>
