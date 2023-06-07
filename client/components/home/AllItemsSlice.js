@@ -6,7 +6,7 @@ export const fetchAllItemsAsync = createAsyncThunk(
   "allItems/fetchAllItems",
   async () => {
     try {
-      const response = await axios.get("/items");
+      const response = await axios.get("/api/items");
       return response.data;
     } catch (error) {
       console.log("error:", error);
