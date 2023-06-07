@@ -2,6 +2,7 @@
 
 const router = require('express').Router();
 const Item = require('../db/models/Item');
+const User = require('../db/models/User')
 
 router.get('/', async (req, res, next) => {
     try {
@@ -12,6 +13,20 @@ router.get('/', async (req, res, next) => {
         res.json(items);
     } catch (error) {
         next(error);
+    }
+});
+
+router.post("/", async (req, res, next) => {
+    // 1) grab the token in the authorization header
+    // 2) grab the user for the token
+    // 3) if user is admin, do the work, otherwise throw 401
+    const token = req.headers.authorization
+    const user = await User.findByToken(token)
+    if (user.isAdmin) {
+        // do the thing
+        Item.create(req.body)
+    } else {
+        res.send(401)
     }
 });
 
