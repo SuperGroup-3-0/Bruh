@@ -11,5 +11,4 @@ module.exports = {
   db,
   User,
   Item,
-  Order,
 };
