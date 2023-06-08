@@ -1,7 +1,9 @@
+// Cart.js
+
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { removeFromCart, updateCartItemQuantity } from "/cartSlice";
+import { removeFromCart, updateCartItemQuantity } from "./cartslice";
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
@@ -24,7 +26,8 @@ const Cart = () => {
   };
 
   const handleQuantityChange = (itemId, newQuantity) => {
-    dispatch(updateCartItemQuantity({ itemId, newQuantity }));
+    const parsedQuantity = isNaN(newQuantity) ? 0 : parseInt(newQuantity, 10);
+    dispatch(updateCartItemQuantity({ itemId, newQuantity: parsedQuantity }));
   };
 
   const handleIncreaseQuantity = (itemId) => {
@@ -50,13 +53,8 @@ const Cart = () => {
         </div>
       ) : (
         <div>
-          <div className="names">
-            <h3>Product</h3>
-            <h3>Price</h3>
-            <h3>Description</h3>
-          </div>
           <div className="cart-items">
-            {cart.cartItems?.map((cartItem) => (
+            {cart.cartItems.map((cartItem) => (
               <div className="cart-item" key={cartItem.id}>
                 <div className="cart-product">
                   <img src={cartItem.imageUrl} alt={cartItem.name} />
@@ -67,7 +65,7 @@ const Cart = () => {
                     Delete
                   </button>
                   {isLoggedIn && (
-                    <>
+                    <div className="quantity-container">
                       <button
                         onClick={() => handleDecreaseQuantity(cartItem.id)}
                         disabled={cartItem.quantity === 1}
@@ -80,7 +78,7 @@ const Cart = () => {
                       >
                         +
                       </button>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>

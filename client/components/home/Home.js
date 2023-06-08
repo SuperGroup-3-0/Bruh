@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { addToCart } from "../cart/cartslice";
 import { fetchAllItemsAsync } from "./AllItemsSlice";
 
 /**
@@ -14,6 +15,11 @@ const Home = () => {
 
   const handleClickItem = (id) => {
     navigate(`/items/${id}`);
+  };
+
+  const handleAddToCart = (event, item) => {
+    event.stopPropagation();
+    dispatch(addToCart(item));
   };
 
   useEffect(() => {
@@ -44,6 +50,9 @@ const Home = () => {
             <h3 className="price">{item.price}</h3>
             <p className="description">{item.description}</p>
           </div>
+          <button onClick={(event) => handleAddToCart(event, item)}>
+            Add to Cart
+          </button>
         </div>
       ))}
     </div>
