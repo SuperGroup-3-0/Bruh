@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {SingleItem} from "../components/singleItem/singleItem"
+import { SingleItem } from "../components/singleItem/singleItem";
 import { Route, Routes } from "react-router-dom";
 import AuthForm from "../components/auth/AuthForm";
 import Home from "../components/home/Home";
+import Cart from "../components/cart/cart";
 import { me } from "./store";
 
 /**
@@ -24,7 +25,8 @@ const AppRoutes = () => {
         <Routes>
           <Route path="/*" element={<Home />} />
           <Route to="/home" element={<Home />} />
-          <Route path="/items/:itemId" element={<SingleItem/>} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/items/:itemId" element={<SingleItem />} />
         </Routes>
       ) : (
         <Routes>
@@ -40,6 +42,7 @@ const AppRoutes = () => {
             path="/signup"
             element={<AuthForm name="signup" displayName="Sign Up" />}
           />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
       )}
     </div>
