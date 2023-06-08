@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { removeFromCart, updateCartItemQuantity } from "./cartSlice";
+import { removeFromCart, updateCartItemQuantity } from "/cartSlice";
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
@@ -9,8 +9,8 @@ const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleDeleteItem = async (itemId) => {
-    await dispatch(removeFromCart(itemId));
+  const handleDeleteItem = (itemId) => {
+    dispatch(removeFromCart(itemId));
   };
 
   const handleCheckout = () => {
@@ -24,7 +24,7 @@ const Cart = () => {
   };
 
   const handleQuantityChange = (itemId, newQuantity) => {
-    dispatch(updateCartItemQuantity({ itemId, quantity: newQuantity }));
+    dispatch(updateCartItemQuantity({ itemId, newQuantity }));
   };
 
   const handleIncreaseQuantity = (itemId) => {
@@ -35,8 +35,10 @@ const Cart = () => {
 
   const handleDecreaseQuantity = (itemId) => {
     const item = cart.cartItems.find((item) => item.id === itemId);
-    const newQuantity = item.quantity - 1;
-    handleQuantityChange(itemId, newQuantity);
+    if (item.quantity > 1) {
+      const newQuantity = item.quantity - 1;
+      handleQuantityChange(itemId, newQuantity);
+    }
   };
 
   return (
@@ -61,11 +63,11 @@ const Cart = () => {
                   <div>{cartItem.name}</div>
                   <p>{cartItem.price}</p>
                   <p>{cartItem.description}</p>
+                  <button onClick={() => handleDeleteItem(cartItem.id)}>
+                    Delete
+                  </button>
                   {isLoggedIn && (
                     <>
-                      <button onClick={() => handleDeleteItem(cartItem.id)}>
-                        Delete
-                      </button>
                       <button
                         onClick={() => handleDecreaseQuantity(cartItem.id)}
                         disabled={cartItem.quantity === 1}
