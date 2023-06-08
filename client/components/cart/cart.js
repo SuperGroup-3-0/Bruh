@@ -63,11 +63,11 @@ const Cart = () => {
                   <div>{cartItem.name}</div>
                   <p>{cartItem.price}</p>
                   <p>{cartItem.description}</p>
+                  <button onClick={() => handleDeleteItem(cartItem.id)}>
+                    Delete
+                  </button>
                   {isLoggedIn && (
                     <>
-                      <button onClick={() => handleDeleteItem(cartItem.id)}>
-                        Delete
-                      </button>
                       <button
                         onClick={() => handleDecreaseQuantity(cartItem.id)}
                         disabled={cartItem.quantity === 1}
