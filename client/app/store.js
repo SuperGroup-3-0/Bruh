@@ -13,6 +13,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });
 
+
 export default store;
 export * from "../components/auth/authSlice";
 export * from "../components/home/AllItemsSlice";

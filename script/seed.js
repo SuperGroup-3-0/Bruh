@@ -61,12 +61,12 @@ const items = [
 ];
 
 const users = [
-  {
-    username: "admin",
-    password: "secret",
-    isAdmin: true,
-    imageUrl: null
-  },
+  // {
+  //   username: "admin",
+  //   password: "secret",
+  //   isAdmin: true,
+  //   imageUrl: null
+  // },
   {
     username: "johnDoe",
     password: "password123",
