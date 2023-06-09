@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import AuthForm from "../components/auth/AuthForm";
 import Home from "../components/home/Home";
 import Cart from "../components/cart/cart";
+import Checkout from "../components/cart/checkout";
 import { me } from "./store";
 
 /**
@@ -38,6 +39,7 @@ const AppRoutes = () => {
         <Route to="/home" element={<Home />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/items/:itemId" element={<SingleItem />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </div>
   );
