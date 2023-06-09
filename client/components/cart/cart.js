@@ -1,15 +1,14 @@
-// Cart.js
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { removeFromCart, updateCartItemQuantity } from "./cartslice";
+import { removeFromCart, updateCartItemQuantity, setCart } from "./cartslice";
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const isLoggedIn = useSelector((state) => state.auth.me.hasOwnProperty("id"));
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const username = useSelector((state) => state.auth.me.username);
 
   const handleDeleteItem = (itemId) => {
     dispatch(removeFromCart(itemId));
@@ -44,9 +43,85 @@ const Cart = () => {
     }
   };
 
+  const calculateItemTotal = (cartItem) => {
+    return cartItem.price * cartItem.quantity;
+  };
+
+  const calculateTotalItems = () => {
+    return cart.cartItems.reduce(
+      (total, cartItem) => total + cartItem.quantity,
+      0
+    );
+  };
+
+  const calculateTotalItemCost = () => {
+    return cart.cartItems.reduce(
+      (total, cartItem) => total + calculateItemTotal(cartItem),
+      0
+    );
+  };
+
+  const calculateSalesTax = () => {
+    const salesTaxRate = 0.06; // 6% sales tax rate
+    const totalItemCost = calculateTotalItemCost();
+    const salesTax = totalItemCost * salesTaxRate;
+    return salesTax;
+  };
+
+  const calculateOrderTotal = () => {
+    const shippingCost = calculateShippingCost();
+    const itemsTotal = calculateTotalItemCost();
+    const salesTax = calculateSalesTax();
+    return itemsTotal + shippingCost + salesTax;
+  };
+
+  //shipping
+  const calculateShippingCost = () => {
+    if (shippingMethod === "usps-ground") {
+      return 10.85;
+    } else if (shippingMethod === "usps-priority") {
+      return 14.09;
+    } else if (shippingMethod === "usps-overnight") {
+      return 49.45;
+    } else {
+      return 0;
+    }
+  };
+
+  const [shippingMethod, setShippingMethod] = useState("");
+  const handleShippingMethodChange = (event) => {
+    setShippingMethod(event.target.value);
+  };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      // Save cart to local storage whenever it changes
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  }, [cart, isLoggedIn]);
+
+  useEffect(() => {
+    // Retrieve cart from local storage on component mount
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart && !isLoggedIn) {
+      const parsedCart = JSON.parse(savedCart);
+      dispatch(setCart(parsedCart));
+    }
+  }, [dispatch, isLoggedIn]);
+
+  //setting the date
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentYear = currentDate.getFullYear();
+
   return (
     <div className="cartContainer">
-      <h2>Cart</h2>
+      <h2>
+        {isLoggedIn
+          ? `${username} Cart - ${currentMonth}/${currentDay}/${currentYear}`
+          : `Guest Cart - ${currentMonth}/${currentDay}/${currentYear}`}
+      </h2>
       {cart.cartItems.length === 0 ? (
         <div className="cartEmpty">
           <p>You have no items in your cart!</p>
@@ -58,33 +133,72 @@ const Cart = () => {
               <div className="cart-item" key={cartItem.id}>
                 <div className="cart-product">
                   <img src={cartItem.imageUrl} alt={cartItem.name} />
-                  <div>{cartItem.name}</div>
-                  <p>{cartItem.price}</p>
-                  <p>{cartItem.description}</p>
-                  <button onClick={() => handleDeleteItem(cartItem.id)}>
-                    Delete
-                  </button>
-                  {isLoggedIn && (
-                    <div className="quantity-container">
-                      <button
-                        onClick={() => handleDecreaseQuantity(cartItem.id)}
-                        disabled={cartItem.quantity === 1}
-                      >
-                        -
-                      </button>
-                      <span>{cartItem.quantity}</span>
-                      <button
-                        onClick={() => handleIncreaseQuantity(cartItem.id)}
-                      >
-                        +
-                      </button>
-                    </div>
-                  )}
+                  <div>Item: {cartItem.name}</div>
+                  <p>Price: ${cartItem.price.toFixed(2)} USD</p>
+                  <div className="quantity-container">
+                    <span>Quantity: </span>
+                    <button
+                      onClick={() => handleDecreaseQuantity(cartItem.id)}
+                      disabled={cartItem.quantity === 1}
+                    >
+                      -
+                    </button>
+                    <span>{cartItem.quantity}</span>
+                    <button onClick={() => handleIncreaseQuantity(cartItem.id)}>
+                      +
+                    </button>
+                  </div>
                 </div>
+                <p>
+                  Item Total: ${calculateItemTotal(cartItem).toFixed(2)} USD
+                </p>
+                <button onClick={() => handleDeleteItem(cartItem.id)}>
+                  Delete
+                </button>
               </div>
             ))}
           </div>
-          {isLoggedIn && <button onClick={handleCheckout}>Checkout</button>}
+          <div>
+            <p>Items in Cart: {calculateTotalItems()}</p>
+            <p>Cart Total: ${calculateTotalItemCost().toFixed(2)} USD</p>
+            <br />
+            <p>Shipping Method:</p>
+            <div style={{ marginLeft: "20px" }}>
+              <label>
+                <input
+                  type="checkbox"
+                  value="usps-ground"
+                  checked={shippingMethod === "usps-ground"}
+                  onChange={handleShippingMethodChange}
+                />
+                USPS Ground: $10.85 USD
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  value="usps-priority"
+                  checked={shippingMethod === "usps-priority"}
+                  onChange={handleShippingMethodChange}
+                />
+                USPS Priority: $14.09 USD
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  value="usps-overnight"
+                  checked={shippingMethod === "usps-overnight"}
+                  onChange={handleShippingMethodChange}
+                />
+                USPS Overnight: $49.45 USD
+              </label>
+            </div>
+            <br />
+            <p>Sales Tax: ${calculateSalesTax().toFixed(2)} USD</p>
+            <p>Order Total: ${calculateOrderTotal().toFixed(2)} USD</p>
+          </div>
+          <button onClick={handleCheckout}>Checkout</button>
         </div>
       )}
     </div>
