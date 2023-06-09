@@ -64,7 +64,7 @@ const Checkout = () => {
             .slice(0, 10)
             .replace(/(\d{4})/g, '$1-')
             .slice(0, 13);
-        setCardNumber(formattedPhone);
+        setPhone(formattedPhone);
     }
 
     function handleCardNumberChange(e) {
@@ -90,8 +90,8 @@ const Checkout = () => {
         const { value } = e.target;
         const formattedCvc = value
         .replace(/\D/g, '')
-        .substr(0, 2);
-        setZip(formattedCvc);
+        .substr(0, 3);
+        setCvc(formattedCvc);
     }
 
     return (
@@ -102,6 +102,7 @@ const Checkout = () => {
             <label htmlFor="phone">Phone</label>
                 <input type="text" name="email" value={email} onChange={e => setEmail(e.target.value)} />
                 <br />
+
                 <br />
                 <label htmlFor="firstName">First Name</label>
                 <input type="text" name="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} />
@@ -124,10 +125,8 @@ const Checkout = () => {
                 <label htmlFor="zip">ZIP</label>
                 <input type="text" name="zip" value={zip} onChange={handleZipChange} />
                 <br />
-                <label htmlFor="phone">Phone</label>
-                <input type="text" name="phone" value={phone} onChange={handlePhoneChange} />
                 <br />
-                <br />
+
                 <h3>Payment Information</h3>
                 <label htmlFor="creditDebit">Credit/Debit Number</label>
                 <input type="text" name="creditDebit" value={creditDebit} onChange={handleCardNumberChange} />
