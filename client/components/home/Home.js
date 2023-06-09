@@ -27,11 +27,15 @@ const Home = () => {
   }, [dispatch]);
 
   return (
+    <div>
+      {username ? (
+            <div>
+                <h3>Welcome, {username}</h3>
+            </div>) : null
+           }
+     
     <div className="all-items-container">
-      <div>
-        <h3>Welcome, {username}</h3>
-      </div>
-      {items.map((item) => (
+    {items.map((item) => (
         <div
           key={item.id}
           className="single-item-container"
@@ -55,6 +59,7 @@ const Home = () => {
           </button>
         </div>
       ))}
+    </div>
     </div>
   );
 };
