@@ -51,10 +51,10 @@ const Home = () => {
           </div>
           <div className="item-content">
             <h2 className="name">{item.name}</h2>
-            <h3 className="price">{item.price}</h3>
+            <h3 className="price">${item.price}</h3>
             <p className="description">{item.description}</p>
           </div>
-          <button onClick={(event) => handleAddToCart(event, item)}>
+          <button class= "single-item-button" onClick={(event) => handleAddToCart(event, item)}>
             Add to Cart
           </button>
         </div>
