@@ -13,17 +13,17 @@ const Navbar = () => {
   };
 
   return (
-    <div>
+    <div class = "navbar-container">
       <h1>Welcome to Bruh!</h1>
       <nav>
         {isLoggedIn ? (
           <div>
             {/* The navbar will show these links after you log in */}
             <Link to="/home">Home</Link>
-            <button type="button" onClick={logoutAndRedirectHome}>
-              Logout
-            </button>
             <Link to="/cart">Cart</Link>
+            <button type="button" onClick={logoutAndRedirectHome}>
+                Logout
+            </button>
           </div>
         ) : (
           <div>

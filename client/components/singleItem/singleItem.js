@@ -25,10 +25,10 @@ export const SingleItem = () => {
 
   return (
     <div id="singleItem">
-      <img src={item?.imageUrl} width="200" height="200" alt="Item" />
-      <h1>Item Name: {item?.name}</h1>
-      <p>Item Price: {item?.price}</p>
-      <p>Item Description: {item?.description}</p>
+      <img src={item.imageUrl} width="200" height="200" alt="Item" />
+      <h1>{item.name}</h1>
+      <p>${item.price}</p>
+      <p>{item.description}</p>
       <div>
         <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
       </div>
