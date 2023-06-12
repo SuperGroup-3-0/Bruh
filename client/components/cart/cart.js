@@ -93,6 +93,7 @@ const Cart = () => {
     setShippingMethod(event.target.value);
   };
 
+  //logged-in local storage
   useEffect(() => {
     if (isLoggedIn) {
       // Save cart to local storage whenever it changes
@@ -103,9 +104,41 @@ const Cart = () => {
   useEffect(() => {
     // Retrieve cart from local storage on component mount
     const savedCart = localStorage.getItem("cart");
-    if (savedCart && !isLoggedIn) {
+    if (savedCart && isLoggedIn) {
       const parsedCart = JSON.parse(savedCart);
       dispatch(setCart(parsedCart));
+    } else {
+      // Clear cart when user is not logged in
+      dispatch(setCart({ cartItems: [] }));
+    }
+  }, [dispatch, isLoggedIn]);
+
+  // Guest cart session storage
+  useEffect(() => {
+    if (!isLoggedIn) {
+      // Save cart to session storage with expiration time of 1 hour
+      sessionStorage.setItem("cart", JSON.stringify(cart));
+      const expirationTime = new Date().getTime() + 3600000; // 1 hour
+      sessionStorage.setItem("cartExpiration", expirationTime.toString());
+    }
+  }, [cart, isLoggedIn]);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      // Retrieve cart from session storage on component mount
+      const savedCart = sessionStorage.getItem("cart");
+      const expirationTime = sessionStorage.getItem("cartExpiration");
+      if (savedCart && expirationTime) {
+        const currentTime = new Date().getTime();
+        if (currentTime <= parseInt(expirationTime)) {
+          const parsedCart = JSON.parse(savedCart);
+          dispatch(setCart(parsedCart));
+        } else {
+          sessionStorage.removeItem("cart");
+          sessionStorage.removeItem("cartExpiration");
+          dispatch(setCart({ cartItems: [] }));
+        }
+      }
     }
   }, [dispatch, isLoggedIn]);
 
@@ -132,7 +165,10 @@ const Cart = () => {
             {cart.cartItems.map((cartItem) => (
               <div className="cart-item" key={cartItem.id}>
                 <div className="cart-product">
-                  <img src={cartItem.imageUrl} alt={cartItem.name} />
+                  <img
+                    src={cartItem.imageUrl}
+                    style={{ width: "300px", height: "300px" }}
+                  />
                   <div>Item: {cartItem.name}</div>
                   <p>Price: ${cartItem.price.toFixed(2)} USD</p>
                   <div className="quantity-container">
