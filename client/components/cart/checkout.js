@@ -57,7 +57,7 @@ const Checkout = () => {
         setZip(formattedZip);
     }
 
-    const handlePhoneChange = () => {
+    const handlePhoneChange = (e) => { // handle proper area code and auto fill number fields with correct numbers deleting dashes and parenthesis
         const { value } = e.target;
         const formattedPhone = value
             .replace(/\D/g, '')
@@ -67,24 +67,29 @@ const Checkout = () => {
         setPhone(formattedPhone);
     }
 
-    function handleCardNumberChange(e) {
+    function handleCardNumberChange(e) { //autofill correct dashes and number of digits in credit card spacing while also being able to delete them
         const { value } = e.target;
         const formattedCreditDebit = value
             .replace(/\D/g, '')
             .slice(0, 16)
             .replace(/(\d{4})/g, '$1-')
+            .replace(/-$/, '')
             .slice(0, 19);
         setCardNumber(formattedCreditDebit);
     }
 
     const handleExpirationChange = (e) => {
         const { value } = e.target;
-        const formattedExp = value
-            .replace(/\D/g, '')
-            .replace(/(\d{2})(\d{0,2})/, '$1/$2')
-            .substr(0, 5);
+        let formattedExp = value
+          .replace(/[^\d]/g, '')
+          .substr(0, 4);
+      
+        if (formattedExp.length > 2) {
+          formattedExp = `${formattedExp.substr(0, 2)}/${formattedExp.substr(2)}`;
+        }
+      
         setExpiration(formattedExp);
-    }
+      };
 
     const handleCvcChange = (e) => {
         const { value } = e.target;
@@ -99,7 +104,7 @@ const Checkout = () => {
             <h2>Checkout</h2>
             <h3>Shipping Information</h3>
             <form onSubmit={handleSubmit}>
-            <label htmlFor="phone">Phone</label>
+            <label htmlFor="email">Email</label>
                 <input type="text" name="email" value={email} onChange={e => setEmail(e.target.value)} />
                 <br />
 
@@ -126,6 +131,9 @@ const Checkout = () => {
                 <input type="text" name="zip" value={zip} onChange={handleZipChange} />
                 <br />
                 <br />
+                <label htmlFor="phone">Phone</label>
+                <input type="text" name="phone" value={phone} onChange={handlePhoneChange} />
+                <br />
 
                 <h3>Payment Information</h3>
                 <label htmlFor="creditDebit">Credit/Debit Number</label>
@@ -142,6 +150,9 @@ const Checkout = () => {
                 <br />
                 <button type="submit">Order</button>
             </form>
+
+            {/* Order Summary */}
+
         </div>
     );
 };

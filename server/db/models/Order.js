@@ -5,7 +5,6 @@ const Order = db.define('order', {
     purchaseId: {
       type: Sequelize.INTEGER
     }
-  });
-  
+});
 
 module.exports = Order
