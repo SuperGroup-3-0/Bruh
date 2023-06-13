@@ -244,6 +244,7 @@ const Cart = () => {
         </div>
       ) : (
         <div>
+
           {cart.guestCartItems.length === 0 ? (
             <div className="cartEmpty">
               <p>You have no items in your cart!</p>
@@ -281,6 +282,9 @@ const Cart = () => {
                     </p>
                     <button onClick={() => handleDeleteItem(cartItem.id)}>
                       Delete
+
+       
+
                     </button>
                   </div>
                 ))}
