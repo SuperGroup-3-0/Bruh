@@ -7,6 +7,7 @@ import Home from "../components/home/Home";
 import Cart from "../components/cart/cart";
 import Checkout from "../components/cart/checkout";
 import { me } from "./store";
+import OrderConfirmation from "../components/cart/orderConfirmation";
 
 /**
  * COMPONENT
@@ -40,6 +41,7 @@ const AppRoutes = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/items/:itemId" element={<SingleItem />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/confirmation" element={<OrderConfirmation />} />
       </Routes>
     </div>
   );
