@@ -1,8 +1,11 @@
 // checkout page
 
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
+import { checkoutSubmitAsync } from "./orderConfirmationSlice";
+
 
 const Checkout = () => {
     const [email, setEmail] = useState('');
@@ -23,6 +26,15 @@ const Checkout = () => {
 
     const navigate = useNavigate();
 
+    const dispatch = useDispatch();
+    
+    const cart = useSelector((state) => {
+        state.cart.cartItems
+    });
+    const userId = useSelector((state) => {
+        state.auth.me.id
+    });
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setEmail('')
@@ -39,7 +51,9 @@ const Checkout = () => {
         setExpiration('');
         setCvc('');
 
-        navigate('/order-confirmation');
+        dispatch(checkoutSubmitAsync(userId, cart)) //dispatching
+
+        navigate("/confirmation");//changed to navigate to a confirmation page/N
     }
 
     const selectCountry = (val) => {
