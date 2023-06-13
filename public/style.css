@@ -18,21 +18,21 @@ button {
   border-radius: 8px;
 }
 
-.all-items-container{
+.all-items-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   grid-auto-rows: minmax(100px, auto);
 }
 
-.single-item-container{
+.single-item-container {
   background-color: #c27796;
   border-radius: 15px;
   padding: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-img{
+img {
   border-radius: 7px;
 }
 
@@ -57,4 +57,25 @@ nav a {
 form div {
   margin: 1em;
   display: inline-block;
+}
+
+.navbar-container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.title-nav-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  margin-right: 10px;
+}
+
+.logo {
+  width: 335px;
+  height: 208px;
 }
