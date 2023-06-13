@@ -30,16 +30,34 @@ const Cart = () => {
   };
 
   const handleIncreaseQuantity = (itemId) => {
-    const item = cart.cartItems.find((item) => item.id === itemId);
-    const newQuantity = item.quantity + 1;
-    handleQuantityChange(itemId, newQuantity);
+    if (isLoggedIn) {
+      const item = cart.cartItems.find((item) => item.id === itemId);
+      if (item && item.quantity) {
+        const newQuantity = item.quantity + 1;
+        handleQuantityChange(itemId, newQuantity);
+      }
+    } else {
+      const item = cart.guestCartItems.find((item) => item.id === itemId);
+      if (item && item.quantity) {
+        const newQuantity = item.quantity + 1;
+        handleQuantityChange(itemId, newQuantity);
+      }
+    }
   };
 
   const handleDecreaseQuantity = (itemId) => {
-    const item = cart.cartItems.find((item) => item.id === itemId);
-    if (item.quantity > 1) {
-      const newQuantity = item.quantity - 1;
-      handleQuantityChange(itemId, newQuantity);
+    if (isLoggedIn) {
+      const item = cart.cartItems.find((item) => item.id === itemId);
+      if (item && item.quantity > 1) {
+        const newQuantity = item.quantity - 1;
+        handleQuantityChange(itemId, newQuantity);
+      }
+    } else {
+      const item = cart.guestCartItems.find((item) => item.id === itemId);
+      if (item && item.quantity > 1) {
+        const newQuantity = item.quantity - 1;
+        handleQuantityChange(itemId, newQuantity);
+      }
     }
   };
 
@@ -48,10 +66,19 @@ const Cart = () => {
   };
 
   const calculateTotalItems = () => {
-    return cart.cartItems.reduce(
-      (total, cartItem) => total + cartItem.quantity,
-      0
-    );
+    let totalItems = 0;
+    if (isLoggedIn) {
+      totalItems = cart.cartItems.reduce(
+        (total, cartItem) => total + cartItem.quantity,
+        0
+      );
+    } else {
+      totalItems = cart.guestCartItems.reduce(
+        (total, cartItem) => total + cartItem.quantity,
+        0
+      );
+    }
+    return totalItems;
   };
 
   const calculateTotalItemCost = () => {
@@ -116,26 +143,26 @@ const Cart = () => {
   // Guest cart session storage
   useEffect(() => {
     if (!isLoggedIn) {
-      // Save cart to session storage with expiration time of 1 hour
-      sessionStorage.setItem("cart", JSON.stringify(cart));
+      // Save cart to local storage with expiration time of 1 hour
+      localStorage.setItem("cart", JSON.stringify(cart));
       const expirationTime = new Date().getTime() + 3600000; // 1 hour
-      sessionStorage.setItem("cartExpiration", expirationTime.toString());
+      localStorage.setItem("cartExpiration", expirationTime.toString());
     }
   }, [cart, isLoggedIn]);
 
   useEffect(() => {
     if (!isLoggedIn) {
-      // Retrieve cart from session storage on component mount
-      const savedCart = sessionStorage.getItem("cart");
-      const expirationTime = sessionStorage.getItem("cartExpiration");
+      // Retrieve cart from local storage on component mount
+      const savedCart = localStorage.getItem("cart");
+      const expirationTime = localStorage.getItem("cartExpiration");
       if (savedCart && expirationTime) {
         const currentTime = new Date().getTime();
         if (currentTime <= parseInt(expirationTime)) {
           const parsedCart = JSON.parse(savedCart);
           dispatch(setCart(parsedCart));
         } else {
-          sessionStorage.removeItem("cart");
-          sessionStorage.removeItem("cartExpiration");
+          localStorage.removeItem("cart");
+          localStorage.removeItem("cartExpiration");
           dispatch(setCart({ cartItems: [] }));
         }
       }
@@ -244,7 +271,6 @@ const Cart = () => {
         </div>
       ) : (
         <div>
-
           {cart.guestCartItems.length === 0 ? (
             <div className="cartEmpty">
               <p>You have no items in your cart!</p>
@@ -282,9 +308,6 @@ const Cart = () => {
                     </p>
                     <button onClick={() => handleDeleteItem(cartItem.id)}>
                       Delete
-
-       
-
                     </button>
                   </div>
                 ))}
