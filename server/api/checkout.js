@@ -7,7 +7,7 @@ const Item = require('../db/models/Item');
 const User = require('../db/models/User');
 
 
-router.post('/checkout', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
     try {
         const { userId, cart } = req.body;
         console.log(req.body)
@@ -19,7 +19,8 @@ router.post('/checkout', async (req, res, next) => {
             itemId: item.id,
             quantity,
         });
-        await order.setUser(User);
+        const user = await User.findByPk(userId);
+        await order.setUser(user);
        }
        res.status(200).json({ message: "Order placed successfully" });
     } catch (error) {
