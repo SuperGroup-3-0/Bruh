@@ -24,7 +24,7 @@ router.post('/', async (req, res, next) => {
        }
        res.status(200).json({ message: "Order placed successfully" });
     } catch (error) {
-        next(error)
+        next(error);
     }
 });
 
