@@ -5,6 +5,9 @@ import { logout } from "../../app/store";
 
 const Navbar = () => {
   const isLoggedIn = useSelector((state) => !!state.auth.me.id);
+  const cartItems = useSelector((state) =>
+    isLoggedIn ? state.cart.cartItems : state.cart.guestCartItems
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const logoutAndRedirectHome = () => {
@@ -12,17 +15,23 @@ const Navbar = () => {
     navigate("/home");
   };
 
+  const cartItemCount = cartItems.reduce(
+    (total, cartItem) => total + cartItem.quantity,
+    0
+  );
+
   return (
     <div className="all">
       <div className="navbar-container">
         <div className="title-nav-container">
-          <h1 className="title">Welcome to Bruh!</h1>
           <nav>
             {isLoggedIn ? (
               <div>
                 {/* The navbar will show these links after you log in */}
                 <Link to="/home">Home</Link>
-                <Link to="/cart">Cart</Link>
+                <Link to="/cart">
+                  Cart🛒 {cartItemCount > 0 && <span>({cartItemCount})</span>}
+                </Link>
                 <button type="button" onClick={logoutAndRedirectHome}>
                   Logout
                 </button>
@@ -33,7 +42,9 @@ const Navbar = () => {
                 <Link to="/home">Home</Link>
                 <Link to="/login">Login</Link>
                 <Link to="/signup">Sign Up</Link>
-                <Link to="/cart">Cart</Link>
+                <Link to="/cart">
+                  Cart🛒 {cartItemCount > 0 && <span>({cartItemCount})</span>}
+                </Link>
               </div>
             )}
           </nav>
