@@ -10,7 +10,7 @@ const User = require('../db/models/User');
 router.post('/checkout', async (req, res, next) => {
     try {
         const { userId, cart } = req.body;
-        console.log(cart)
+        console.log(req.body)
         const order = await Order.create({userId});
        for (const { itemId, quantity } of cart){
         const item = await Item.findByPk(itemId);
@@ -20,8 +20,8 @@ router.post('/checkout', async (req, res, next) => {
             quantity,
         });
         await order.setUser(User);
-        res.status(200).json({ message: "Order placed successfully" });
        }
+       res.status(200).json({ message: "Order placed successfully" });
     } catch (error) {
         next(error)
     }
