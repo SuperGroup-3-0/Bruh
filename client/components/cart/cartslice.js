@@ -43,37 +43,54 @@ const cartSlice = createSlice({
     },
     removeFromCart(state, action) {
       const itemId = action.payload;
-      state.cartItems = state.cartItems.filter((item) => item.id !== itemId);
-      // Update the local storage with the updated cart items
-      localStorage.setItem(
-        "cart",
-        JSON.stringify({ cartItems: state.cartItems })
-      );
-    },
-    removeFromCart(state, action) {
-      const itemId = action.payload;
-      state.cartItems = state.cartItems.filter((item) => item.id !== itemId);
-      // Update the local storage with the updated cart items
-      localStorage.setItem(
-        "cart",
-        JSON.stringify({ cartItems: state.cartItems })
-      );
+      if (localStorage.getItem("token")) {
+        state.cartItems = state.cartItems.filter((item) => item.id !== itemId);
+        // Update the local storage with the updated cart items
+        localStorage.setItem(
+          "cart",
+          JSON.stringify({ cartItems: state.cartItems })
+        );
+      } else {
+        state.guestCartItems = state.guestCartItems.filter(
+          (item) => item.id !== itemId
+        );
+        // Update the local storage with the updated guestCartItems
+        localStorage.setItem(
+          "guestCartItems",
+          JSON.stringify({ guestCartItems: state.guestCartItems })
+        );
+      }
     },
     updateCartItemQuantity(state, action) {
       const { itemId, newQuantity } = action.payload;
       const parsedQuantity = isNaN(newQuantity) ? 0 : parseInt(newQuantity, 10);
-      const updatedCartItems = state.cartItems.map((item) => {
-        if (item.id === itemId) {
-          return { ...item, quantity: parsedQuantity };
-        }
-        return item;
-      });
-      state.cartItems = updatedCartItems;
-      // Update the local storage with the updated cart items
-      localStorage.setItem(
-        "cart",
-        JSON.stringify({ cartItems: state.cartItems })
-      );
+      if (localStorage.getItem("token")) {
+        const updatedCartItems = state.cartItems.map((item) => {
+          if (item.id === itemId) {
+            return { ...item, quantity: parsedQuantity };
+          }
+          return item;
+        });
+        state.cartItems = updatedCartItems;
+        // Update the local storage with the updated cart items
+        localStorage.setItem(
+          "cart",
+          JSON.stringify({ cartItems: state.cartItems })
+        );
+      } else {
+        const updatedGuestCartItems = state.guestCartItems.map((item) => {
+          if (item.id === itemId) {
+            return { ...item, quantity: parsedQuantity };
+          }
+          return item;
+        });
+        state.guestCartItems = updatedGuestCartItems;
+        // Update the local storage with the updated guestCartItems
+        localStorage.setItem(
+          "guestCartItems",
+          JSON.stringify({ guestCartItems: state.guestCartItems })
+        );
+      }
     },
     setCart(state, action) {
       state.cartItems = action.payload.cartItems;
