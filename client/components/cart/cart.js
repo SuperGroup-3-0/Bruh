@@ -155,86 +155,183 @@ const Cart = () => {
           ? `${username} Cart - ${currentMonth}/${currentDay}/${currentYear}`
           : `Guest Cart - ${currentMonth}/${currentDay}/${currentYear}`}
       </h2>
-      {cart.cartItems.length === 0 ? (
-        <div className="cartEmpty">
-          <p>You have no items in your cart!</p>
+      {isLoggedIn ? (
+        <div>
+          {cart.cartItems.length === 0 ? (
+            <div className="cartEmpty">
+              <p>You have no items in your cart!</p>
+            </div>
+          ) : (
+            <div>
+              <div className="cart-items">
+                {cart.cartItems.map((cartItem, index) => (
+                  <div className="cart-item" key={cartItem.id + index}>
+                    <div className="cart-product">
+                      <img
+                        src={cartItem.imageUrl}
+                        style={{ width: "300px", height: "300px" }}
+                      />
+                      <div>Item: {cartItem.name}</div>
+                      <p>Price: ${cartItem.price.toFixed(2)} USD</p>
+                      <div className="quantity-container">
+                        <span>Quantity: </span>
+                        <button
+                          onClick={() => handleDecreaseQuantity(cartItem.id)}
+                          disabled={cartItem.quantity === 1}
+                        >
+                          -
+                        </button>
+                        <span>{cartItem.quantity}</span>
+                        <button
+                          onClick={() => handleIncreaseQuantity(cartItem.id)}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    <p>
+                      Item Total: ${calculateItemTotal(cartItem).toFixed(2)} USD
+                    </p>
+                    <button onClick={() => handleDeleteItem(cartItem.id)}>
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div>
+                <p>Items in Cart: {calculateTotalItems()}</p>
+                <p>Cart Total: ${calculateTotalItemCost().toFixed(2)} USD</p>
+                <br />
+                <p>Shipping Method:</p>
+                <div style={{ marginLeft: "20px" }}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      value="usps-ground"
+                      checked={shippingMethod === "usps-ground"}
+                      onChange={handleShippingMethodChange}
+                    />
+                    USPS Ground: $10.85 USD
+                  </label>
+
+                  <label>
+                    <input
+                      type="checkbox"
+                      value="usps-priority"
+                      checked={shippingMethod === "usps-priority"}
+                      onChange={handleShippingMethodChange}
+                    />
+                    USPS Priority: $14.09 USD
+                  </label>
+
+                  <label>
+                    <input
+                      type="checkbox"
+                      value="usps-overnight"
+                      checked={shippingMethod === "usps-overnight"}
+                      onChange={handleShippingMethodChange}
+                    />
+                    USPS Overnight: $49.45 USD
+                  </label>
+                </div>
+                <br />
+                <p>Sales Tax: ${calculateSalesTax().toFixed(2)} USD</p>
+                <p>Order Total: ${calculateOrderTotal().toFixed(2)} USD</p>
+              </div>
+              <button onClick={handleCheckout}>Checkout</button>
+            </div>
+          )}
         </div>
       ) : (
         <div>
-          <div className="cart-items">
-            {cart.cartItems.map((cartItem) => (
-              <div className="cart-item" key={cartItem.id}>
-                <div className="cart-product">
-                  <img
-                    src={cartItem.imageUrl}
-                    style={{ width: "300px", height: "300px" }}
-                  />
-                  <div>Item: {cartItem.name}</div>
-                  <p>Price: ${cartItem.price.toFixed(2)} USD</p>
-                  <div className="quantity-container">
-                    <span>Quantity: </span>
-                    <button
-                      onClick={() => handleDecreaseQuantity(cartItem.id)}
-                      disabled={cartItem.quantity === 1}
-                    >
-                      -
-                    </button>
-                    <span>{cartItem.quantity}</span>
-                    <button onClick={() => handleIncreaseQuantity(cartItem.id)}>
-                      +
+
+          {cart.guestCartItems.length === 0 ? (
+            <div className="cartEmpty">
+              <p>You have no items in your cart!</p>
+            </div>
+          ) : (
+            <div>
+              <div className="cart-items">
+                {cart.guestCartItems.map((cartItem, index) => (
+                  <div className="cart-item" key={cartItem.id + index}>
+                    <div className="cart-product">
+                      <img
+                        src={cartItem.imageUrl}
+                        style={{ width: "300px", height: "300px" }}
+                      />
+                      <div>Item: {cartItem.name}</div>
+                      <p>Price: ${cartItem.price.toFixed(2)} USD</p>
+                      <div className="quantity-container">
+                        <span>Quantity: </span>
+                        <button
+                          onClick={() => handleDecreaseQuantity(cartItem.id)}
+                          disabled={cartItem.quantity === 1}
+                        >
+                          -
+                        </button>
+                        <span>{cartItem.quantity}</span>
+                        <button
+                          onClick={() => handleIncreaseQuantity(cartItem.id)}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    <p>
+                      Item Total: ${calculateItemTotal(cartItem).toFixed(2)} USD
+                    </p>
+                    <button onClick={() => handleDeleteItem(cartItem.id)}>
+                      Delete
+
+       
+
                     </button>
                   </div>
-                </div>
-                <p>
-                  Item Total: ${calculateItemTotal(cartItem).toFixed(2)} USD
-                </p>
-                <button onClick={() => handleDeleteItem(cartItem.id)}>
-                  Delete
-                </button>
+                ))}
               </div>
-            ))}
-          </div>
-          <div>
-            <p>Items in Cart: {calculateTotalItems()}</p>
-            <p>Cart Total: ${calculateTotalItemCost().toFixed(2)} USD</p>
-            <br />
-            <p>Shipping Method:</p>
-            <div style={{ marginLeft: "20px" }}>
-              <label>
-                <input
-                  type="checkbox"
-                  value="usps-ground"
-                  checked={shippingMethod === "usps-ground"}
-                  onChange={handleShippingMethodChange}
-                />
-                USPS Ground: $10.85 USD
-              </label>
+              <div>
+                <p>Items in Cart: {calculateTotalItems()}</p>
+                <p>Cart Total: ${calculateTotalItemCost().toFixed(2)} USD</p>
+                <br />
+                <p>Shipping Method:</p>
+                <div style={{ marginLeft: "20px" }}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      value="usps-ground"
+                      checked={shippingMethod === "usps-ground"}
+                      onChange={handleShippingMethodChange}
+                    />
+                    USPS Ground: $10.85 USD
+                  </label>
 
-              <label>
-                <input
-                  type="checkbox"
-                  value="usps-priority"
-                  checked={shippingMethod === "usps-priority"}
-                  onChange={handleShippingMethodChange}
-                />
-                USPS Priority: $14.09 USD
-              </label>
+                  <label>
+                    <input
+                      type="checkbox"
+                      value="usps-priority"
+                      checked={shippingMethod === "usps-priority"}
+                      onChange={handleShippingMethodChange}
+                    />
+                    USPS Priority: $14.09 USD
+                  </label>
 
-              <label>
-                <input
-                  type="checkbox"
-                  value="usps-overnight"
-                  checked={shippingMethod === "usps-overnight"}
-                  onChange={handleShippingMethodChange}
-                />
-                USPS Overnight: $49.45 USD
-              </label>
+                  <label>
+                    <input
+                      type="checkbox"
+                      value="usps-overnight"
+                      checked={shippingMethod === "usps-overnight"}
+                      onChange={handleShippingMethodChange}
+                    />
+                    USPS Overnight: $49.45 USD
+                  </label>
+                </div>
+                <br />
+                <p>Sales Tax: ${calculateSalesTax().toFixed(2)} USD</p>
+                <p>Order Total: ${calculateOrderTotal().toFixed(2)} USD</p>
+              </div>
+              <button onClick={handleCheckout}>Checkout</button>
             </div>
-            <br />
-            <p>Sales Tax: ${calculateSalesTax().toFixed(2)} USD</p>
-            <p>Order Total: ${calculateOrderTotal().toFixed(2)} USD</p>
-          </div>
-          <button onClick={handleCheckout}>Checkout</button>
+          )}
         </div>
       )}
     </div>
