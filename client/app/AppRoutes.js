@@ -8,7 +8,6 @@ import Cart from "../components/cart/cart";
 import Checkout from "../components/cart/checkout";
 import { me } from "./store";
 import OrderConfirmation from "../components/cart/orderConfirmation";
-import { Order } from "../../server/db";
 
 /**
  * COMPONENT
