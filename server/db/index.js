@@ -6,6 +6,7 @@ const User = require("./models/User");
 const Item = require("./models/Item");
 const Order = require("./models/Order");
 const OrderItem = require("./models/OrderItem");
+const Translation = require("./models/Translation");
 
 //put relationships here
 
@@ -15,4 +16,4 @@ Order.belongsTo(User);
 Order.belongsToMany(Item, { through: OrderItem }); //order is not a quality of an item, maybe instead hasMany
 Item.belongsToMany(Order, { through: OrderItem });
 
-module.exports = { db, Item, User, Order, OrderItem };
+module.exports = { db, Item, User, Order, OrderItem, Translation };

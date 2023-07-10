@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import i18n from "i18next";
 
 
 // Thunk
@@ -7,7 +8,11 @@ export const fetchSingleItemAsync = createAsyncThunk(
   "singleItem/fetchSingleItem",
   async (id) => {
     try {
-      const response = await axios.get(`/api/items/${id}`);
+      const response = await axios.get(`/api/items/${id}`, {
+        headers: {
+          'Accept-Language': i18n.language
+        }
+      });
       return response.data;
     } catch (error) {
       console.log("error:", error);

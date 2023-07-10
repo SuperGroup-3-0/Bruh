@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { removeFromCart, updateCartItemQuantity, setCart } from "./cartslice";
+import { useTranslation } from "react-i18next";
+
+
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
@@ -9,6 +12,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const username = useSelector((state) => state.auth.me.username);
+  const { t } = useTranslation();
 
   const handleDeleteItem = (itemId) => {
     dispatch(removeFromCart(itemId));
@@ -179,14 +183,14 @@ const Cart = () => {
     <div className="cartContainer">
       <h2>
         {isLoggedIn
-          ? `${username} Cart - ${currentMonth}/${currentDay}/${currentYear}`
-          : `Guest Cart - ${currentMonth}/${currentDay}/${currentYear}`}
+          ? `${username} ${t('logged-in-cart')} - ${currentDay}/${currentMonth}/${currentYear}`
+          : `${t('guest-cart')} - ${currentDay}/${currentMonth}/${currentYear}`}
       </h2>
       {isLoggedIn ? (
         <div>
           {cart.cartItems.length === 0 ? (
             <div className="cartEmpty">
-              <p>You have no items in your cart!</p>
+              <p>{t('no-items')}</p>
             </div>
           ) : (
             <div>
@@ -198,10 +202,10 @@ const Cart = () => {
                         src={cartItem.imageUrl}
                         style={{ width: "300px", height: "300px" }}
                       />
-                      <div>Item: {cartItem.name}</div>
-                      <p>Price: ${cartItem.price.toFixed(2)} USD</p>
+                      <div>{t('item')} {cartItem.name}</div>
+                      <p>{t('price')} ${cartItem.price.toFixed(2)}</p>
                       <div className="quantity-container">
-                        <span>Quantity: </span>
+                        <span>{t('quantity')} </span>
                         <button
                           onClick={() => handleDecreaseQuantity(cartItem.id)}
                           disabled={cartItem.quantity === 1}
@@ -217,19 +221,19 @@ const Cart = () => {
                       </div>
                     </div>
                     <p>
-                      Item Total: ${calculateItemTotal(cartItem).toFixed(2)} USD
+                    {t('item-total')} ${calculateItemTotal(cartItem).toFixed(2)} 
                     </p>
                     <button onClick={() => handleDeleteItem(cartItem.id)}>
-                      Delete
+                    {t('delete')}
                     </button>
                   </div>
                 ))}
               </div>
               <div>
-                <p>Items in Cart: {calculateTotalItems()}</p>
-                <p>Cart Total: ${calculateTotalItemCost().toFixed(2)} USD</p>
+                <p>{t('items-in-cart')} {calculateTotalItems()}</p>
+                <p>{t('cart-total')} ${calculateTotalItemCost().toFixed(2)}</p>
                 <br />
-                <p>Shipping Method:</p>
+                <p>{t('shipping-method')}</p>
                 <div style={{ marginLeft: "20px" }}>
                   <label>
                     <input
@@ -238,7 +242,7 @@ const Cart = () => {
                       checked={shippingMethod === "usps-ground"}
                       onChange={handleShippingMethodChange}
                     />
-                    USPS Ground: $10.85 USD
+                    {t('ground')} $10.85 
                   </label>
 
                   <label>
@@ -248,7 +252,7 @@ const Cart = () => {
                       checked={shippingMethod === "usps-priority"}
                       onChange={handleShippingMethodChange}
                     />
-                    USPS Priority: $14.09 USD
+                    {t('priority')} $14.09 
                   </label>
 
                   <label>
@@ -258,14 +262,14 @@ const Cart = () => {
                       checked={shippingMethod === "usps-overnight"}
                       onChange={handleShippingMethodChange}
                     />
-                    USPS Overnight: $49.45 USD
+                    {t('overnight')} $49.45 
                   </label>
                 </div>
                 <br />
-                <p>Sales Tax: ${calculateSalesTax().toFixed(2)} USD</p>
-                <p>Order Total: ${calculateOrderTotal().toFixed(2)} USD</p>
+                <p>{t('sales-tax')} ${calculateSalesTax().toFixed(2)} </p>
+                <p>{t('order-total')} ${calculateOrderTotal().toFixed(2)} </p>
               </div>
-              <button onClick={handleCheckout}>Checkout</button>
+              <button onClick={handleCheckout}>{t('checkout')}</button>
             </div>
           )}
         </div>
@@ -273,7 +277,7 @@ const Cart = () => {
         <div>
           {cart.guestCartItems.length === 0 ? (
             <div className="cartEmpty">
-              <p>You have no items in your cart!</p>
+              <p>{t('no-items')}</p>
             </div>
           ) : (
             <div>

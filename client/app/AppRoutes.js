@@ -8,6 +8,7 @@ import Cart from "../components/cart/cart";
 import Checkout from "../components/cart/checkout";
 import { me } from "./store";
 import OrderConfirmation from "../components/cart/orderConfirmation";
+import { useTranslation } from "react-i18next";
 
 /**
  * COMPONENT
@@ -21,6 +22,8 @@ const AppRoutes = () => {
     dispatch(me());
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <div>
       <Routes>
@@ -28,11 +31,11 @@ const AppRoutes = () => {
             <>
               <Route
                 path="/login"
-                element={<AuthForm name="login" displayName="Login" />}
+                element={<AuthForm name="login" displayName={t('login')} />}
               />
               <Route
                 path="/signup"
-                element={<AuthForm name="signup" displayName="Sign Up" />}
+                element={<AuthForm name="signup" displayName={t('signup')} />}
               />
             </>
         } 

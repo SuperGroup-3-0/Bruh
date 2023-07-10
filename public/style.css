@@ -81,3 +81,20 @@ form div {
   width: 335px;
   height: 208px;
 }
+
+.language-selector-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.language-selected {
+  font-weight: bold;
+  font-size: smaller;
+  border: 1px solid rgb(112, 114, 130);
+}
+
+.language-not-selected {
+  font-size: smaller;
+  border: 1px solid rgb(112, 114, 130);
+}

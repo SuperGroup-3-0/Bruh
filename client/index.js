@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import store from './app/store.js';
 import App from './app/App';
 import { BrowserRouter as Router } from 'react-router-dom';
+import './i18n/config';
 
 const root = createRoot(document.getElementById('app'));
 

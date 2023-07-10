@@ -1,16 +1,28 @@
 'use strict';
 
 const router = require('express').Router();
+const { Translation } = require('../db');
 const Item = require('../db/models/Item');
 const User = require('../db/models/User')
 
 router.get('/', async (req, res, next) => {
     try {
-        const items = await Item.findAll();
+        const items = await Item.findAll({
+            include: [
+                { model: Translation , as: "nameTranslation" },
+                { model: Translation , as: "descriptionTranslation" }
+            ]
+        });
         if (!items) {
             return res.status(404).json({ error:"No Items Found" });
         }
-        res.json(items);
+
+        const language = req.get('Accept-Language')
+
+        const translatedObjects = items.map((item) => {
+            return translateItem(item, language)
+        })
+        res.json(translatedObjects);
     } catch (error) {
         next(error);
     }
@@ -30,13 +42,30 @@ router.get('/', async (req, res, next) => {
 //     }
 // });
 
+function translateItem(item, language) {
+    return {
+        id: item.id,
+        imageUrl: item.imageUrl,
+        price: item.price,
+        name: item.nameTranslation.getLocalizedString(language),
+        description: item.descriptionTranslation.getLocalizedString(language),
+    }
+}
 router.get('/:id', async (req, res, next) => {
     try {
-        const singleItem = await Item.findByPk(req.params.id);
+        const singleItem = await Item.findByPk(req.params.id, {
+            include: [
+                { model: Translation , as: "nameTranslation" },
+                { model: Translation , as: "descriptionTranslation" }
+            ]
+        });
         if (!singleItem) {
             return res.status(404).json({ error:"No Item Found" });
         }
-        res.json(singleItem);
+
+        const language = req.get('Accept-Language')
+        const translatedItem = translateItem(singleItem, language)
+        res.json(translatedItem);
     } catch (error) {
         next(error);
     }

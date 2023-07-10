@@ -1,12 +1,17 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import i18n from 'i18next';
 
 // Thunk
 export const fetchAllItemsAsync = createAsyncThunk(
   "allItems/fetchAllItems",
   async () => {
     try {
-      const response = await axios.get("/api/items");
+      const response = await axios.get("/api/items", {
+        headers: {
+          'Accept-Language':  i18n.language
+        }
+      });
       return response.data;
     } catch (error) {
       console.log("error:", error);

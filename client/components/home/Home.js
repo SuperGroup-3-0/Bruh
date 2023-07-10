@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../cart/cartslice";
 import { fetchAllItemsAsync } from "./AllItemsSlice";
+import { useTranslation } from "react-i18next";
 
 /**
  * COMPONENT
@@ -22,9 +23,13 @@ const Home = () => {
     dispatch(addToCart(item));
   };
 
+  const { t } = useTranslation();
+
   useEffect(() => {
+    console.log('use effect')
     dispatch(fetchAllItemsAsync());
-  }, [dispatch]);
+  }, [dispatch, t]);
+
 
   return (
     <div>
@@ -54,8 +59,8 @@ const Home = () => {
             <h3 className="price">${item.price}</h3>
             <p className="description">{item.description}</p>
           </div>
-          <button class= "single-item-button" onClick={(event) => handleAddToCart(event, item)}>
-            Add to Cart
+          <button className= "single-item-button" onClick={(event) => handleAddToCart(event, item)}>
+          {t('add-to-cart')}
           </button>
         </div>
       ))}

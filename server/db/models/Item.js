@@ -1,15 +1,8 @@
 const Sequelize = require("sequelize");
+const Translation = require("./Translation")
 const db = require("../db");
 
 const Item = db.define("item", {
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  description: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
   price: {
     type: Sequelize.INTEGER,
     validate: {
@@ -24,4 +17,15 @@ const Item = db.define("item", {
   },
 });
 
+Item.belongsTo(Translation, {
+  as: 'nameTranslation',
+  foreignKey: "name_key"
+})
+
+Item.belongsTo(Translation, {
+  as: 'descriptionTranslation',
+  foreignKey: "description_key"
+})
+
 module.exports = Item;
+

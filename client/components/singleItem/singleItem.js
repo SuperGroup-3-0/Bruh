@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { addToCart } from "../cart/cartslice";
 import { fetchSingleItemAsync } from "./SingleItemSlice";
+import { useTranslation } from "react-i18next";
 
 /**
  * COMPONENT
@@ -15,9 +16,12 @@ export const SingleItem = () => {
   const item = useSelector((state) => {
     return state.singleItemState.singleItem;
   });
+
+  const { t } = useTranslation()
+
   useEffect(() => {
     dispatch(fetchSingleItemAsync(itemId));
-  }, [dispatch]);
+  }, [dispatch, t]);
 
   const handleAddToCart = (item) => {
     dispatch(addToCart(item));

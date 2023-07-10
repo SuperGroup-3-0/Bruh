@@ -5,9 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { checkoutSubmitAsync } from "./orderConfirmationSlice";
+import { useTranslation } from "react-i18next";
 
 
 const Checkout = () => {
+    const { t } = useTranslation();
     const [email, setEmail] = useState('');
 
     const [firstName, setFirstName] = useState('');
@@ -115,54 +117,54 @@ const Checkout = () => {
 
     return (
         <div>
-            <h2>Checkout</h2>
-            <h3>Shipping Information</h3>
+            <h2>{t('checkout-header')}</h2>
+            <h3>{t('shipping-information')}</h3>
             <form onSubmit={handleSubmit}>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t('email')}</label>
                 <input type="text" name="email" value={email} onChange={e => setEmail(e.target.value)} />
                 <br />
 
                 <br />
-                <label htmlFor="firstName">First Name</label>
+                <label htmlFor="firstName">{t('first-name')}</label>
                 <input type="text" name="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} />
                 <br />
-                <label htmlFor="lastName">Last Name</label>
+                <label htmlFor="lastName">{t('last-name')}</label>
                 <input type="text" name="lastName" value={lastName} onChange={e => setLastName(e.target.value)} />
                 <br />
-                <label htmlFor="address">Address</label>
+                <label htmlFor="address">{t('address')}</label>
                 <input type="text" name="address" value={address} onChange={e => setAddress(e.target.value)} />
                 <br />
-                <label htmlFor="city">City</label>
+                <label htmlFor="city">{t('city')}</label>
                 <input type="text" name="city" value={city} onChange={e => setCity(e.target.value)} />
                 <br />
-                <label htmlFor="country">Country</label>
-                <CountryDropdown value={country} onChange={selectCountry} priorityOptions={["CA", "US", "GB"]} />
+                <label htmlFor="country">{t('country')}</label>
+                <CountryDropdown value={country} onChange={t('select-country')} priorityOptions={["CA", "US", "GB"]} />
                 <br />
-                <label htmlFor="region">Region</label>
+                <label htmlFor="region">{t('region')}</label>
                 <RegionDropdown country={country} value={region} onChange={selectRegion} />
                 <br />
-                <label htmlFor="zip">ZIP</label>
+                <label htmlFor="zip">{t('zip')}</label>
                 <input type="text" name="zip" value={zip} onChange={handleZipChange} />
                 <br />
                 <br />
-                <label htmlFor="phone">Phone</label>
+                <label htmlFor="phone">{t('phone')}</label>
                 <input type="text" name="phone" value={phone} onChange={handlePhoneChange} />
                 <br />
 
-                <h3>Payment Information</h3>
-                <label htmlFor="creditDebit">Credit/Debit Number</label>
+                <h3>{t('payment-information')}</h3>
+                <label htmlFor="creditDebit">{t('credit-debit-number')}</label>
                 <input type="text" name="creditDebit" value={creditDebit} onChange={handleCardNumberChange} />
                 <br />
-                <label htmlFor="nameCard">Name on Card</label>
+                <label htmlFor="nameCard">{t('name-on-card')}</label>
                 <input type="text" name="nameCard" value={nameCard} onChange={e => setNameCard(e.target.value)} />
                 <br />
-                <label htmlFor="expiration">Expiration</label>
+                <label htmlFor="expiration">{t('expiration')}</label>
                 <input type="text" name="expiration" value={expiration} onChange={handleExpirationChange} />
                 <br />
-                <label htmlFor="cvc">CVC</label>
+                <label htmlFor="cvc">{t('cvc')}</label>
                 <input type="text" name="cvc" value={cvc} onChange={handleCvcChange} />
                 <br />
-                <button type="submit">Order</button>
+                <button type="submit">{t('order')}</button>
             </form>
 
             {/* Order Summary */}
